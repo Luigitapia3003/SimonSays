@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using TMPro;
 
 public class GameManager : MonoBehaviour
 {
@@ -12,7 +13,13 @@ public class GameManager : MonoBehaviour
 
     public List<Button> ClickeableButtons;
 
-    public CanvasGroup buttons;
+    [SerializeField] private TextMeshProUGUI _scoreText;
+    
+    private int CurrentScore = 0;
+
+    [SerializeField] private GameObject EndGameCanvas;
+    
+    [SerializeField] private GameObject EndGamePanel;
 
     void Start()
     {
@@ -51,6 +58,7 @@ public class GameManager : MonoBehaviour
     public void StartGame()
     {
         StartCoroutine(StartNextRound());
+        _scoreText.text = CurrentScore.ToString("0");
     }
 
     public IEnumerator HighlightButtons(int buttonID)
@@ -64,21 +72,36 @@ public class GameManager : MonoBehaviour
     {
         playerSequenceList.Clear();
         playerTaskList.Clear();
+        CurrentScore = 0;
+        EndGamePanel.SetActive(true);
         yield return new WaitForSeconds(1f);
-        Debug.Log("Conectar con Menú de inicio");
+        EndGameCanvas.SetActive(true);
     }
 
     public IEnumerator StartNextRound()
     {
         playerSequenceList.Clear();
-        buttons.interactable = false;
+        for (int i = 0; i < ClickeableButtons.Count; i++)
+        {
+            ClickeableButtons[i].interactable = false;
+        }
         yield return new WaitForSeconds(1f);
+        IncreaseScore();
         playerTaskList.Add(Random.Range(0, ClickeableButtons.Count));
         foreach(int index in playerTaskList)
         {
             yield return StartCoroutine(HighlightButtons(index));
         }
-        buttons.interactable = true;
+        for (int i = 0; i < ClickeableButtons.Count; i++)
+        {
+            ClickeableButtons[i].interactable = true;
+        }
         yield return null;
+    }
+
+    public void IncreaseScore()
+    {
+        CurrentScore++;
+        _scoreText.text = CurrentScore.ToString("0");
     }
 }
