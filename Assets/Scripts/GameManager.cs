@@ -6,7 +6,7 @@ using TMPro;
 
 public class GameManager : MonoBehaviour
 {
-    private List<int> playerTaskList = new List<int>();
+    private List<int> playerTaskList = new List<int> { };
     private List<int> playerSequenceList = new List<int>();
 
     public List<List<Color32>> buttonColors = new List<List<Color32>>();
